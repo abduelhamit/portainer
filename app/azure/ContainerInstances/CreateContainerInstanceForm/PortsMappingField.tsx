@@ -1,29 +1,36 @@
+import { FormikErrors } from 'formik';
+
 import { ButtonSelector } from '@/portainer/components/form-components/ButtonSelector/ButtonSelector';
 import { FormError } from '@/portainer/components/form-components/FormError';
 import { InputGroup } from '@/portainer/components/form-components/InputGroup';
 import { InputList } from '@/portainer/components/form-components/InputList';
-import {
-  InputListError,
-  ItemProps,
-} from '@/portainer/components/form-components/InputList/InputList';
+import { ItemProps } from '@/portainer/components/form-components/InputList/InputList';
 
 import styles from './PortsMappingField.module.css';
 
 type Protocol = 'TCP' | 'UDP';
 
 export interface PortMapping {
-  host: string;
-  container: string;
+  host?: number;
+  container?: number;
   protocol: Protocol;
 }
 
 interface Props {
   value: PortMapping[];
-  onChange(value: PortMapping[]): void;
-  errors?: InputListError<PortMapping>[] | string;
+  onChange?(value: PortMapping[]): void;
+  errors?: FormikErrors<PortMapping>[] | string | string[];
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
-export function PortsMappingField({ value, onChange, errors }: Props) {
+export function PortsMappingField({
+  value,
+  onChange = () => {},
+  errors,
+  disabled,
+  readOnly,
+}: Props) {
   return (
     <>
       <InputList<PortMapping>
@@ -31,9 +38,15 @@ export function PortsMappingField({ value, onChange, errors }: Props) {
         value={value}
         onChange={onChange}
         addLabel="map additional port"
-        itemBuilder={() => ({ host: '', container: '', protocol: 'TCP' })}
+        itemBuilder={() => ({
+          host: 0,
+          container: 0,
+          protocol: 'TCP',
+        })}
         item={Item}
         errors={errors}
+        disabled={disabled}
+        readOnly={readOnly}
       />
       {typeof errors === 'string' && (
         <div className="form-group col-md-12">
@@ -44,7 +57,13 @@ export function PortsMappingField({ value, onChange, errors }: Props) {
   );
 }
 
-function Item({ onChange, item, error }: ItemProps<PortMapping>) {
+function Item({
+  onChange,
+  item,
+  error,
+  disabled,
+  readOnly,
+}: ItemProps<PortMapping>) {
   return (
     <div className={styles.item}>
       <div className="flex items-center gap-2">
@@ -53,7 +72,12 @@ function Item({ onChange, item, error }: ItemProps<PortMapping>) {
           <InputGroup.Input
             placeholder="e.g. 80"
             value={item.host}
-            onChange={(e) => handleChange('host', e.target.value)}
+            onChange={(e) =>
+              handleChange('host', parseInt(e.target.value || '0', 10))
+            }
+            disabled={disabled}
+            readOnly={readOnly}
+            type="number"
           />
         </InputGroup>
 
@@ -66,7 +90,12 @@ function Item({ onChange, item, error }: ItemProps<PortMapping>) {
           <InputGroup.Input
             placeholder="e.g. 80"
             value={item.container}
-            onChange={(e) => handleChange('container', e.target.value)}
+            onChange={(e) =>
+              handleChange('container', parseInt(e.target.value || '0', 10))
+            }
+            disabled={disabled}
+            readOnly={readOnly}
+            type="number"
           />
         </InputGroup>
 
@@ -74,6 +103,8 @@ function Item({ onChange, item, error }: ItemProps<PortMapping>) {
           onChange={(value) => handleChange('protocol', value)}
           value={item.protocol}
           options={[{ value: 'TCP' }, { value: 'UDP' }]}
+          disabled={disabled}
+          readOnly={readOnly}
         />
       </div>
       {!!error && (
@@ -84,7 +115,7 @@ function Item({ onChange, item, error }: ItemProps<PortMapping>) {
     </div>
   );
 
-  function handleChange(name: string, value: string) {
+  function handleChange(name: keyof PortMapping, value: string | number) {
     onChange({ ...item, [name]: value });
   }
 }
