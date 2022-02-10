@@ -36,7 +36,7 @@ export function NetworkDetailsView() {
   const filters = {
     network: [networkId],
   };
-  const containersQuery = useContainers(environmentId, filters);
+  const containersQuery = useContainers(environmentId, true, filters);
 
   useEffect(() => {
     if (networkQuery.data && containersQuery.data) {
