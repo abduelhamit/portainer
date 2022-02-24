@@ -1,19 +1,46 @@
 import { useQuery } from 'react-query';
 
-import { getTeams } from './teams.service';
-import { Team } from './types';
+import { getTeam, getTeamMemberships, getTeams } from './teams.service';
+import { Team, TeamId } from './types';
 
 export function useTeams<T = Team[]>(
-  enabled = true,
-  select: (data: Team[]) => T = (data) => data as unknown as T
+  onlyLedTeams = false,
+  {
+    enabled = true,
+    select = (data) => data as unknown as T,
+  }: {
+    enabled?: boolean;
+    select?: (data: Team[]) => T;
+  } = {}
 ) {
-  const teams = useQuery(['teams'], () => getTeams(), {
-    meta: {
-      error: { title: 'Failure', message: 'Unable to load teams' },
-    },
-    enabled,
-    select,
-  });
+  const teams = useQuery(
+    ['teams', { onlyLedTeams }],
+    () => getTeams(onlyLedTeams),
+    {
+      meta: {
+        error: { title: 'Failure', message: 'Unable to load teams' },
+      },
+      enabled,
+      select,
+    }
+  );
 
   return teams;
+}
+
+export function useTeam(id: TeamId, onError?: (error: unknown) => void) {
+  return useQuery(['teams', id], () => getTeam(id), {
+    meta: {
+      error: { title: 'Failure', message: 'Unable to load team' },
+    },
+    onError,
+  });
+}
+
+export function useTeamMemberships(id: TeamId) {
+  return useQuery(['teams', id, 'memberships'], () => getTeamMemberships(id), {
+    meta: {
+      error: { title: 'Failure', message: 'Unable to load team memberships' },
+    },
+  });
 }

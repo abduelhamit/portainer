@@ -1,27 +1,28 @@
 import { Formik, Field, Form } from 'formik';
+import { useMutation, useQueryClient } from 'react-query';
+import { useReducer } from 'react';
 
 import { FormControl } from '@/portainer/components/form-components/FormControl';
 import { Widget, WidgetBody, WidgetTitle } from '@/portainer/components/widget';
-import { UserViewModel } from '@/portainer/models/user';
-import { TeamViewModel } from '@/portainer/models/team';
 import { Input } from '@/portainer/components/form-components/Input';
 import { UsersSelector } from '@/portainer/components/UsersSelector';
 import { LoadingButton } from '@/portainer/components/Button/LoadingButton';
+import { User } from '@/portainer/users/types';
+import { success as notifySuccess } from '@/portainer/services/notifications';
+import { FormValues, Team } from '@/portainer/teams/types';
+import { createTeam } from '@/portainer/teams/teams.service';
 
 import { validationSchema } from './CreateTeamForm.validation';
 
-export interface FormValues {
-  name: string;
-  leaders: number[];
-}
-
 interface Props {
-  users: UserViewModel[];
-  teams: TeamViewModel[];
-  onSubmit(values: FormValues): void;
+  users: User[];
+  teams: Team[];
 }
 
-export function CreateTeamForm({ users, teams, onSubmit }: Props) {
+export function CreateTeamForm({ users, teams }: Props) {
+  const addTeamMutation = useAddTeamMutation();
+  const [formKey, incFormKey] = useReducer((state: number) => state + 1, 0);
+
   const initialValues = {
     name: '',
     leaders: [],
@@ -36,8 +37,9 @@ export function CreateTeamForm({ users, teams, onSubmit }: Props) {
             <Formik
               initialValues={initialValues}
               validationSchema={() => validationSchema(teams)}
-              onSubmit={onSubmit}
+              onSubmit={handleAddTeamClick}
               validateOnMount
+              key={formKey}
             >
               {({
                 values,
@@ -92,7 +94,7 @@ export function CreateTeamForm({ users, teams, onSubmit }: Props) {
                       <LoadingButton
                         disabled={!isValid}
                         dataCy="team-createTeamButton"
-                        isLoading={isSubmitting}
+                        isLoading={isSubmitting || addTeamMutation.isLoading}
                         loadingText="Creating team..."
                       >
                         <i
@@ -110,5 +112,33 @@ export function CreateTeamForm({ users, teams, onSubmit }: Props) {
         </Widget>
       </div>
     </div>
+  );
+
+  async function handleAddTeamClick(values: FormValues) {
+    addTeamMutation.mutate(values, {
+      onSuccess() {
+        incFormKey();
+        notifySuccess('Team successfully added', '');
+      },
+    });
+  }
+}
+
+export function useAddTeamMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (values: FormValues) => createTeam(values.name, values.leaders),
+    {
+      meta: {
+        error: {
+          title: 'Failure',
+          message: 'Failed to create team',
+        },
+      },
+      onSuccess() {
+        return queryClient.invalidateQueries(['teams']);
+      },
+    }
   );
 }
