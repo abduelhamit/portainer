@@ -2,7 +2,6 @@ import angular from 'angular';
 
 import { CreateAccessTokenAngular } from '../views/account/CreateAccessToken';
 
-import sidebarModule from './sidebar';
 import gitFormModule from './forms/git-form';
 import porAccessManagementModule from './accessManagement';
 import formComponentsModule from './form-components';
@@ -18,7 +17,7 @@ import { PasswordCheckHintAngular } from './PasswordCheckHint';
 import { ViewLoadingAngular } from './ViewLoading';
 
 export default angular
-  .module('portainer.app.components', [pageHeaderModule, boxSelectorModule, widgetModule, sidebarModule, gitFormModule, porAccessManagementModule, formComponentsModule])
+  .module('portainer.app.components', [pageHeaderModule, boxSelectorModule, widgetModule, gitFormModule, porAccessManagementModule, formComponentsModule])
   .component('informationPanel', InformationPanelAngular)
   .component('viewLoading', ViewLoadingAngular)
   .component('portainerTooltip', TooltipAngular)

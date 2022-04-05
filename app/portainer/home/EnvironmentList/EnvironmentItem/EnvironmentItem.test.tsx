@@ -24,6 +24,17 @@ test('loads component', async () => {
     Id: 3,
     UserTrusted: false,
     EdgeKey: '',
+    SecuritySettings: {
+      allowBindMountsForRegularUsers: false,
+      allowContainerCapabilitiesForRegularUsers: false,
+      allowDeviceMappingForRegularUsers: false,
+      allowHostNamespaceForRegularUsers: false,
+      allowPrivilegedModeForRegularUsers: false,
+      allowStackManagementForRegularUsers: false,
+      allowSysctlSettingForRegularUsers: false,
+      allowVolumeBrowserForRegularUsers: false,
+      enableHostManagementFeatures: false,
+    },
   };
   const { getByText } = renderComponent(env);
 
@@ -46,6 +57,17 @@ test('shows group name', async () => {
     Id: 3,
     UserTrusted: false,
     EdgeKey: '',
+    SecuritySettings: {
+      allowBindMountsForRegularUsers: false,
+      allowContainerCapabilitiesForRegularUsers: false,
+      allowDeviceMappingForRegularUsers: false,
+      allowHostNamespaceForRegularUsers: false,
+      allowPrivilegedModeForRegularUsers: false,
+      allowStackManagementForRegularUsers: false,
+      allowSysctlSettingForRegularUsers: false,
+      allowVolumeBrowserForRegularUsers: false,
+      enableHostManagementFeatures: false,
+    },
   };
 
   const { findByText } = renderComponent(env, { Name: groupName });
