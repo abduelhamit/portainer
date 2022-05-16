@@ -4,7 +4,7 @@ import { confirmKubeconfigSelection } from '@/portainer/services/modal.service/p
 import { Environment } from '@/portainer/environments/types';
 import { isKubernetesEnvironment } from '@/portainer/environments/utils';
 import { trackEvent } from '@/angulartics.matomo/analytics-services';
-import { Button } from '@/portainer/components/Button';
+import { Button } from '@/react/components/buttons';
 
 interface Props {
   environments?: Environment[];
