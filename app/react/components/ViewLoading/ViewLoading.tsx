@@ -1,7 +1,5 @@
 import clsx from 'clsx';
 
-import { r2a } from '@/react-tools/react2angular';
-
 import styles from './ViewLoading.module.css';
 
 interface Props {
@@ -26,5 +24,3 @@ export function ViewLoading({ message }: Props) {
     </div>
   );
 }
-
-export const ViewLoadingAngular = r2a(ViewLoading, ['message']);

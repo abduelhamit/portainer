@@ -11,11 +11,10 @@ import { pageHeaderModule } from './PageHeader';
 import { TooltipAngular } from './Tip/Tooltip';
 import { beFeatureIndicator } from './BEFeatureIndicator';
 import { InformationPanelAngular } from './InformationPanel';
-import { ViewLoadingAngular } from './ViewLoading';
 
 export default angular
   .module('portainer.app.components', [pageHeaderModule, boxSelectorModule, widgetModule, sidebarModule, gitFormModule, porAccessManagementModule, formComponentsModule])
   .component('informationPanel', InformationPanelAngular)
-  .component('viewLoading', ViewLoadingAngular)
+
   .component('portainerTooltip', TooltipAngular)
   .component('beFeatureIndicator', beFeatureIndicator).name;

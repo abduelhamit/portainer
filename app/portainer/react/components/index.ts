@@ -4,6 +4,7 @@ import { r2a } from '@/react-tools/react2angular';
 import { TagSelector } from '@/react/components/TagSelector';
 import { Loading } from '@/react/components/Widget/Loading';
 import { PasswordCheckHint } from '@/react/components/PasswordCheckHint';
+import { ViewLoading } from '@/react/components/ViewLoading';
 
 import { fileUploadField } from './file-upload-field';
 import { switchField } from './switch-field';
@@ -18,4 +19,5 @@ export const componentsModule = angular
   .component('fileUploadField', fileUploadField)
   .component('porSwitchField', switchField)
   .component('passwordCheckHint', r2a(PasswordCheckHint, []))
-  .component('rdLoading', r2a(Loading, [])).name;
+  .component('rdLoading', r2a(Loading, []))
+  .component('viewLoading', r2a(ViewLoading, ['message'])).name;
