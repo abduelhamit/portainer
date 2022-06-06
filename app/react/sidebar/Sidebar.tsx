@@ -1,4 +1,3 @@
-import { Environment } from '@/portainer/environments/types';
 import { useUser } from '@/portainer/hooks/useUser';
 import { useIsTeamLeader } from '@/portainer/users/queries';
 import { usePublicSettings } from '@/portainer/settings/queries';
@@ -12,11 +11,7 @@ import { Footer } from './Footer';
 import { Header } from './Header';
 import { SidebarProvider } from './useSidebarState';
 
-interface Props {
-  environment: Environment;
-}
-
-export function Sidebar({ environment }: Props) {
+export function Sidebar() {
   const { isAdmin, user } = useUser();
   const isTeamLeader = useIsTeamLeader(user);
 
@@ -41,7 +36,7 @@ export function Sidebar({ environment }: Props) {
               label="Home"
             />
 
-            {environment && <EnvironmentSidebar environment={environment} />}
+            <EnvironmentSidebar />
 
             {isAdmin && EnableEdgeComputeFeatures && <EdgeComputeSidebar />}
 
