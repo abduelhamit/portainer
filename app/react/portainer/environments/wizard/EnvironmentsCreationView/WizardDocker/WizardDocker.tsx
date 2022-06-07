@@ -9,6 +9,7 @@ import { commandsTabs } from '@/react/edge/components/EdgeScriptForm/scripts';
 
 import { AnalyticsStateKey } from '../types';
 import { EdgeAgentTab } from '../shared/EdgeAgentTab';
+import { useFilterEdgeOptionsIfNeeded } from '../useOnlyEdgeOptions';
 
 import { AgentTab } from './AgentTab';
 import { APITab } from './APITab';
@@ -18,7 +19,9 @@ interface Props {
   onCreate(environment: Environment, analytics: AnalyticsStateKey): void;
 }
 
-const options: BoxSelectorOption<'agent' | 'api' | 'socket' | 'edgeAgent'>[] = [
+const defaultOptions: BoxSelectorOption<
+  'agent' | 'api' | 'socket' | 'edgeAgent'
+>[] = [
   {
     id: 'agent',
     icon: 'fa fa-bolt',
@@ -50,6 +53,8 @@ const options: BoxSelectorOption<'agent' | 'api' | 'socket' | 'edgeAgent'>[] = [
 ];
 
 export function WizardDocker({ onCreate }: Props) {
+  const options = useFilterEdgeOptionsIfNeeded(defaultOptions, 'edgeAgent');
+
   const [creationType, setCreationType] = useState(options[0].value);
 
   const tab = getTab(creationType);

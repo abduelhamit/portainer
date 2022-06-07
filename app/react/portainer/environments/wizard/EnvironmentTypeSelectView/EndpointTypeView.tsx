@@ -7,6 +7,8 @@ import { PageHeader } from '@/portainer/components/PageHeader';
 import { Widget, WidgetBody, WidgetTitle } from '@/portainer/components/widget';
 import { useAnalytics } from '@/angulartics.matomo/analytics-services';
 
+import { useCreateEdgeDeviceParam } from '../hooks/useCreateEdgeDeviceParam';
+
 import {
   EnvironmentSelector,
   EnvironmentSelectorValue,
@@ -14,6 +16,8 @@ import {
 import { environmentTypes } from './environment-types';
 
 export function EnvironmentTypeSelectView() {
+  const createEdgeDevice = useCreateEdgeDeviceParam();
+
   const [types, setTypes] = useState<EnvironmentSelectorValue[]>([]);
   const { trackEvent } = useAnalytics();
   const router = useRouter();
@@ -30,7 +34,11 @@ export function EnvironmentTypeSelectView() {
           <Widget>
             <WidgetTitle icon="fa-magic" title="Environment Wizard" />
             <WidgetBody>
-              <EnvironmentSelector value={types} onChange={setTypes} />
+              <EnvironmentSelector
+                value={types}
+                onChange={setTypes}
+                createEdgeDevice={createEdgeDevice}
+              />
               <Button
                 disabled={types.length === 0}
                 onClick={() => startWizard()}
@@ -62,6 +70,7 @@ export function EnvironmentTypeSelectView() {
 
     router.stateService.go('portainer.wizard.endpoints.create', {
       envType: types,
+      ...(createEdgeDevice ? { edgeDevice: createEdgeDevice } : {}),
     });
   }
 }
