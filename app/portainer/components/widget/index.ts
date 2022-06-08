@@ -8,7 +8,7 @@ import { rdWidgetTaskbar } from './rd-widget-taskbar';
 import { rdWidgetTitle } from './rd-widget-title';
 
 export default angular
-  .module('portainer.app.react.components.widget', [])
+  .module('portainer.app.components.widget', [])
   .component('rdWidget', rdWidget)
   .component('rdWidgetBody', rdWidgetBody)
   .component('rdWidgetCustomHeader', rdWidgetCustomHeader)
