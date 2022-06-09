@@ -54,7 +54,7 @@ export interface KubernetesSettings {
   Snapshots?: KubernetesSnapshot[] | null;
 }
 
-export interface EnvironmentSettings {
+export interface EnvironmentSecuritySettings {
   // Whether non-administrator should be able to use bind mounts when creating containers
   allowBindMountsForRegularUsers: boolean;
   // Whether non-administrator should be able to use privileged mode when creating containers
@@ -94,7 +94,7 @@ export type Environment = {
   IsEdgeDevice?: boolean;
   UserTrusted: boolean;
   AMTDeviceGUID?: string;
-  SecuritySettings: EnvironmentSettings;
+  SecuritySettings: EnvironmentSecuritySettings;
 };
 /**
  * TS reference of endpoint_create.go#EndpointCreationType iota
